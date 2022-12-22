@@ -38,8 +38,8 @@ y = np.array(y)
 
 # change these to affect accuracy/time taken to calculate
 learning_rate = 0.01
-min_step = 0.001
-max_loops = 9999
+min_step = 0.0001
+max_loops = 1000
 
 # variable declarations
 old_intercept = 0
@@ -52,25 +52,22 @@ dintRSSsum = 0
 dslopeRSSsum = 0
 
 # calculating intercept (theta0) for linear regression line
+
 for n in range(max_loops):
     old_intercept = new_intercept
+    old_slope = new_slope
     for i in range(len(x)):
         dintRSSsum = dintRSSsum + dinterceptRSS(x[i], y[i], old_slope, old_intercept)
-    if (abs(dintRSSsum * learning_rate) < min_step):
+        dslopeRSSsum = dslopeRSSsum + dslopeRSS(x[i], y[i], old_slope, old_intercept)
+    if (abs(dintRSSsum * learning_rate) < min_step and abs(dslopeRSSsum * learning_rate) < min_step):
         break
 
     new_intercept = old_intercept - (learning_rate * dintRSSsum)
-
-
-# calculating slope (theta1) for linear regression line
-for n in range(max_loops):
-    old_slope = new_slope
-    for i in range(len(x)):
-        dslopeRSSsum = dslopeRSSsum + dslopeRSS(x[i], y[i], old_slope, old_intercept)
-    if (abs(dslopeRSSsum * learning_rate) < min_step):
-        break
-
     new_slope = old_slope - (learning_rate * dslopeRSSsum)
+    dintRSSsum = 0
+    dslopeRSSsum = 0
+
+
 
 
 
