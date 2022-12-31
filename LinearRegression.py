@@ -41,6 +41,7 @@ while True:
 
 x = np.array(x)
 y = np.array(y)
+n = len(x)
 
 # change these to affect accuracy/time taken to calculate
 learning_rate = 0.01
@@ -77,6 +78,9 @@ for n in range(max_loops):
     dintRSSsum = 0
     dslopeRSSsum = 0
 
+slope_list = np.array(slope_list)
+intercept_list = np.array(intercept_list)
+
 
 
 
@@ -88,8 +92,8 @@ for n in range(max_loops):
 #plotting data with linear regression line to visualize data
 
 #plt.subplot(1,3,1)
-plt.scatter(x,y,s=100, color='red', alpha=0.8)
 plt.plot(x, linreg(x, new_slope, new_intercept), linewidth = 3, color='blue', alpha=0.6)
+plt.scatter(x,y,s=100, color='red', alpha=0.8)
 plt.style.use('fivethirtyeight')
 plt.title('Linear Regression of Data')
 plt.xlabel('X')
@@ -103,23 +107,31 @@ plt.annotate(('Theta1 (slope)', new_slope), xy=(0.05, 0.85), xycoords='axes frac
 # plt.subplot(1,3,2)
 # plt.plot(x,RSS())
 
-plt.show()
-
-# fig = plt.figure()
-# ax = fig.add_subplot(projection='3d')
-
-# x_axis = np.array(np.linspace(-50,50,500))
-# z_axis = np.array(np.linspace(-50,50,500))
-# y_axis = lambda x_axis, z_axis:RSS(x[0],y[0],x_axis,z_axis)
-
-# x_axis,z_axis = np.meshgrid(x_axis, z_axis)
-
-
-# ax.plot_surface(x_axis,RSS_3d(x_axis, z_axis, x, y, RSS),z_axis)
-# ax.set_aspect('equal')
 # plt.show()
 
-# print(RSS_3d(10, 10, x, y, RSS))
+fig = plt.figure()
+ax = fig.add_subplot(projection='3d')
+
+x_axis = np.array(np.linspace(new_slope-50,new_slope + 50,500))
+y_axis = np.array(np.linspace(new_intercept -50,new_intercept+50,500))
+#y_axis = lambda x_axis, z_axis:RSS(x[0],y[0],x_axis,z_axis)
+
+x_axis,y_axis = np.meshgrid(x_axis, y_axis)
+
+
+ax.plot_surface(x_axis, y_axis,(RSS_3d(x_axis, y_axis, x, y,RSS)), alpha = 0.6)
+ax.scatter(slope_list, intercept_list,
+           RSS_3d(slope_list, intercept_list, x, y, RSS), color='red', s = 50, alpha = 1)
+ax.set_xlabel('Slope (Theta1)')
+ax.set_ylabel('Intercept (Theta0)')
+ax.set_zlabel('Cost (RSS)')
+# plt.xlim(-40,40)
+# plt.ylim(-40,40)
+plt.show()
+
+print(RSS_3d(10, 10, x, y, RSS))
+print(x_axis)
+print(y_axis)
 
 
 
